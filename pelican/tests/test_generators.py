@@ -57,6 +57,8 @@ class TestArticlesGenerator(unittest.TestCase):
         cls.generator.generate_context()
         cls.articles = [[page.title, page.status, page.category.name,
                          page.template] for page in cls.generator.articles]
+        cls.drafts = [[page.title, page.status, page.category.name,
+                         page.template] for page in cls.generator.drafts]
 
     def setUp(self):
         self.temp_cache = mkdtemp(prefix='pelican_cache.')
@@ -116,8 +118,16 @@ class TestArticlesGenerator(unittest.TestCase):
              'TestCategory', 'article'],
             ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定', 'published',
              '指導書', 'article'],
+            ['An article with HTML comments', 'published', 'Default', 'article'],
+            ['An article with empty HTML attributes', 'published', 'Default', 'article'],
+            ['Markdown with filename metadata', 'published', 'yeah', 'article'],
         ]
         self.assertEqual(sorted(articles_expected), sorted(self.articles))
+
+        drafts_expected = [
+            ['This is a draft of an article', 'draft', 'Default', 'article'],
+            ]
+        self.assertEqual(sorted(drafts_expected), sorted(self.drafts))
 
     def test_generate_categories(self):
 
@@ -293,6 +303,8 @@ class TestArticlesGenerator(unittest.TestCase):
         """Test Article objects caching at the generator level"""
         settings = get_settings(filenames={})
         settings['CACHE_PATH'] = self.temp_cache
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['READERS'] = {'asc': None}
 
@@ -307,12 +319,14 @@ class TestArticlesGenerator(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
-        generator.readers.read_file.assert_called_count == 0
+        self.assertEqual(generator.readers.read_file.call_count, 0)
 
     def test_reader_content_caching(self):
         """Test raw content caching at the reader level"""
         settings = get_settings(filenames={})
         settings['CACHE_PATH'] = self.temp_cache
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
 
         generator = ArticlesGenerator(
@@ -329,7 +343,7 @@ class TestArticlesGenerator(unittest.TestCase):
             reader.read = MagicMock()
         generator.generate_context()
         for reader in readers.values():
-            reader.read.assert_called_count == 0
+            self.assertEqual(reader.read.call_count, 0)
 
     def test_ignore_cache(self):
         """Test that all the articles are read again when not loading cache
@@ -337,6 +351,8 @@ class TestArticlesGenerator(unittest.TestCase):
         used in --ignore-cache or autoreload mode"""
         settings = get_settings(filenames={})
         settings['CACHE_PATH'] = self.temp_cache
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
 
         generator = ArticlesGenerator(
@@ -353,7 +369,7 @@ class TestArticlesGenerator(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
-        generator.readers.read_file.assert_called_count == orig_call_count
+        self.assertEqual(generator.readers.read_file.call_count, orig_call_count)
 
 
 class TestPageGenerator(unittest.TestCase):
@@ -404,6 +420,8 @@ class TestPageGenerator(unittest.TestCase):
         """Test Page objects caching at the generator level"""
         settings = get_settings(filenames={})
         settings['CACHE_PATH'] = self.temp_cache
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['READERS'] = {'asc': None}
 
@@ -418,12 +436,14 @@ class TestPageGenerator(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
-        generator.readers.read_file.assert_called_count == 0
+        self.assertEqual(generator.readers.read_file.call_count, 0)
 
     def test_reader_content_caching(self):
         """Test raw content caching at the reader level"""
         settings = get_settings(filenames={})
         settings['CACHE_PATH'] = self.temp_cache
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
 
         generator = PagesGenerator(
@@ -440,7 +460,7 @@ class TestPageGenerator(unittest.TestCase):
             reader.read = MagicMock()
         generator.generate_context()
         for reader in readers.values():
-            reader.read.assert_called_count == 0
+            self.assertEqual(reader.read.call_count, 0)
 
     def test_ignore_cache(self):
         """Test that all the pages are read again when not loading cache
@@ -448,6 +468,8 @@ class TestPageGenerator(unittest.TestCase):
         used in --ignore_cache or autoreload mode"""
         settings = get_settings(filenames={})
         settings['CACHE_PATH'] = self.temp_cache
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
 
         generator = PagesGenerator(
@@ -464,7 +486,7 @@ class TestPageGenerator(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
-        generator.readers.read_file.assert_called_count == orig_call_count
+        self.assertEqual(generator.readers.read_file.call_count, orig_call_count)
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):

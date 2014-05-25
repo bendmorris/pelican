@@ -481,20 +481,22 @@ class ArticlesGenerator(CachingGenerator):
                 if not is_valid_content(article, f):
                     continue
 
-                self.cache_data(f, article)
-
             self.add_source_path(article)
 
             if article.status.lower() == "published":
                 all_articles.append(article)
+                self.cache_data(f, article)
             elif article.status.lower() == "draft":
-                draft = self.readers.read_file(
-                    base_path=self.path, path=f, content_class=Draft,
-                    context=self.context,
-                    preread_signal=signals.article_generator_preread,
-                    preread_sender=self,
-                    context_signal=signals.article_generator_context,
-                    context_sender=self)
+                draft = self.get_cached_data(f, None)
+                if draft is None:
+                    draft = self.readers.read_file(
+                        base_path=self.path, path=f, content_class=Draft,
+                        context=self.context,
+                        preread_signal=signals.article_generator_preread,
+                        preread_sender=self,
+                        context_signal=signals.article_generator_context,
+                        context_sender=self)
+                    self.cache_data(f, draft)
                 all_drafts.append(draft)
             else:
                 logger.warning("Unknown status %s for file %s, skipping it." %

@@ -1,6 +1,4 @@
-category: yeah
-author: Alexis Métaireau
-
-Markdown with filename metadata
-===============================
+Title: Markdown with filename metadata
+Category: yeah
+Author: Alexis Métaireau
 
