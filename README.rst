@@ -45,16 +45,10 @@ You can access the source code at: https://github.com/getpelican/pelican
 
 If you feel hackish, have a look at the explanation of `Pelican's internals`_.
 
-Feedback / Contact us
----------------------
+How to get help or contribute or provide feedback
+-------------------------------------------------
 
-If you want to see new features in Pelican, don't hesitate to offer
-suggestions, clone the repository, etc. There are many ways to contribute_.
-That's open source, dude!
-
-Send a message to "authors at getpelican dot com" with any requests/feedback! You
-can also join the team at `#pelican on Freenode`_ (or if you don't have an IRC
-client handy, use the webchat_ for quick feedback.
+See our `contribution submission and feedback guidelines <CONTRIBUTING.rst>`_.
 
 .. Links
 
@@ -64,6 +58,3 @@ client handy, use the webchat_ for quick feedback.
 .. _Jinja2: http://jinja.pocoo.org/
 .. _`Pelican documentation`: http://docs.getpelican.com/latest/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
-.. _`#pelican on Freenode`: irc://irc.freenode.net/pelican
-.. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
-.. _contribute: http://docs.getpelican.com/en/latest/contribute.html
