@@ -36,6 +36,7 @@ article_generator_context = signal('article_generator_context')
 
 page_generator_preread = signal('page_generator_preread')
 page_generator_context = signal('page_generator_context')
+page_generator_write_page = signal('page_generator_write_page')
 
 static_generator_preread = signal('static_generator_preread')
 static_generator_context = signal('static_generator_context')
